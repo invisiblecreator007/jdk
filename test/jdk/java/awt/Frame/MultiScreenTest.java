@@ -96,34 +96,39 @@ public class MultiScreenTest {
 
     public List<JFrame> init() {
         List<JFrame> list = new ArrayList<>();
-        for (int j = 0; j < gs.length; j++) {
-            GraphicsConfiguration[] gc = gs[j].getConfigurations();
-            if (gc.length > 0) {
-                for (int i = 0; i < gc.length / 2; i++) {
-                    JFrame f = new JFrame(gc[i]); //test JFrame( gc )
-                    GCCanvas c = new GCCanvas(gc[i]);//test canvas( gc )
-                    Rectangle gcBounds = gc[i].getBounds(); //test getBounds()
-                    int xoffs = gcBounds.x;
-                    int yoffs = gcBounds.y;
 
-                    f.getContentPane().add(c);
-                    f.setTitle("Screen# " + Integer.toString(j) + ", GC#" + Integer.toString(i));
-                    f.setSize(300, 200);
-                    f.setLocation(400 + xoffs, (i * 150) + yoffs);//test displaying in right location
-                    list.add(f);
-
-                    Frame ditherfs = new Frame("DitherTest GC#" + Integer.toString(i), gc[i]);
-                    ditherfs.setLayout(new BorderLayout()); //showDitherTest
-                    DitherTest ditherTest = new DitherTest(gc[i]);
-                    ditherfs.add("Center", ditherTest);
-                    ditherfs.setBounds(300, 200, 300, 200);
-                    ditherfs.setLocation(750 + xoffs, (i * 50) + yoffs);
-                    ditherfs.pack();
-                    ditherfs.show();
-                    ditherTest.start();
-                }
-            }
+        GraphicsDevice primaryDevice = ge.getDefaultScreenDevice();
+        if(primaryDevice == null){
+            throw new RuntimeException("Could not find primary screen!");
         }
+        GraphicsConfiguration[] gc = primaryDevice.getConfigurations();
+        if (gc.length > 0) {
+            //set i to the first graphic configuration
+            int i = 0;
+            JFrame f = new JFrame(gc[i]); //test JFrame( gc )
+            GCCanvas c = new GCCanvas(gc[i]);//test canvas( gc )
+            Rectangle gcBounds = gc[i].getBounds(); //test getBounds()
+            int xoffs = gcBounds.x;
+            int yoffs = gcBounds.y;
+
+            f.getContentPane().add(c);
+            f.setTitle("Screen# " + Integer.toString(i) + ", GC#" + Integer.toString(i));
+            f.setSize(300, 200);
+            f.setLocation(400 + xoffs, (i * 150) + yoffs);//test displaying in right location
+            list.add(f);
+
+            Frame ditherfs = new Frame("DitherTest GC#" + Integer.toString(i), gc[i]);
+            ditherfs.setLayout(new BorderLayout()); //showDitherTest
+            DitherTest ditherTest = new DitherTest(gc[i]);
+            ditherfs.add("Center", ditherTest);
+            ditherfs.setBounds(300, 200, 300, 200);
+            ditherfs.setLocation(750 + xoffs, (i * 50) + yoffs);
+            ditherfs.pack();
+            ditherfs.show();
+            ditherTest.start();
+        }
+
+
         return list;
     }
 }
