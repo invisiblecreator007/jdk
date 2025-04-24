@@ -63,6 +63,7 @@ import jtreg.SkippedException;
  * @library /java/awt/regtesthelpers /test/lib
  * @build PassFailJFrame
  * @summary Tests that no garbage is painted on primary screen with DGA
+ * @requires os.family == "linux"
  * @run main/manual MultiScreenTest
  */
 
